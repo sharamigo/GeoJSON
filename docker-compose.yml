@@ -1,0 +1,46 @@
+services:
+  symfony:
+    build: ./service/symfony/
+    ports:
+      - 8001:80
+    environment:
+      DATABASE_URL: "pgsql://${DB_USER}:${DB_PASS}@${DB_HOST}:5432/${DB_NAME}"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./service/symfony:/var/www/html:rw
+  django:
+    build: ./service/django/
+    ports:
+      - 8000:8000
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./service/django:/code:rw
+  db:
+    build: ./service/postgis/
+    restart: always
+    ports:
+      - 55432:5432
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pgdbuser -d pgdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  mapcomponents:
+    build: ./service/mapcomponents/
+    ports:
+      - 8080:8080
