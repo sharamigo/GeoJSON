@@ -1,0 +1,35 @@
+controllers:
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+
+app_airport:
+  path: /api/airport/index
+  controller: App\Controller\AirportController::index
+  methods: GET|HEAD
+
+airportdata_show:
+  path: /api/airport/{id}
+  controller: App\Controller\AirportController::show
+  methods: GET|HEAD
+
+airportdata_show_all:
+  path: /api/airport/all
+  controller: App\Controller\AirportController::showAll
+  methods: GET|HEAD
+
+app_tram:
+  path: /api/trammetro/index
+  controller: App\Controller\TramController::index
+  methods: GET|HEAD
+
+tramdata_show:
+  path: /api/trammetro/{id}
+  controller: App\Controller\TramController::show
+  methods: GET|HEAD
+
+tramdata_show_all:
+  path: /api/trammetro/all
+  controller: App\Controller\TramController::showAll
+  methods: GET|HEAD
